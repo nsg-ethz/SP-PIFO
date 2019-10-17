@@ -1,0 +1,46 @@
+# line styles for ColorBrewer Spectral
+# for use with divering data
+# provides 8 rainbow colors with red low, pale yellow middle, and blue high
+# compatible with gnuplot >=4.2
+# author: Anna Schneider
+
+# line styles
+set style line 1 lt 1 lc rgb '#D53E4F'
+set style line 2 lt 1 lc rgb '#F46D43'
+set style line 3 lt 1 lc rgb '#FDAE61'
+set style line 4 lt 1 lc rgb '#FEE08B'
+set style line 5 lt 1 lc rgb '#E6F598'
+set style line 6 lt 1 lc rgb '#ABDDA4'
+set style line 7 lt 1 lc rgb '#66C2A5'
+set style line 8 lt 1 lc rgb '#3288BD'
+set style line 9 lt 1 lc rgb '#00CC66'
+
+set style line 21 lt 1 lc rgb '#D53E4F' lw 2 pt 7 ps 0.5
+set style line 22 lt 1 lc rgb '#F46D43' lw 2 pt 11 ps 0.5
+set style line 23 lt 1 lc rgb '#FDAE61' lw 2 pt 9 ps 0.5
+set style line 24 lt 1 lc rgb '#FEE08B' lw 2 pt 8 ps 0.5
+set style line 25 lt 1 lc rgb '#E6F598' lw 2 pt 13 ps 0.5
+set style line 26 lt 1 lc rgb '#ABDDA4' lw 2 pt 12 ps 0.5
+set style line 27 lt 1 lc rgb '#66C2A5' lw 2 pt 5 ps 0.5
+set style line 28 lt 1 lc rgb '#3288BD' lw 2 pt 13 ps 0.5
+set style line 29 lt 1 lc rgb '#00CC66' lw 2 pt 7 ps 0.5
+
+# axes
+set style line 11 lc rgb '#000000' lt 1
+set border 3 front ls 11
+set tics nomirror out scale 0.75
+
+# grid
+set style line 12 lc rgb'#808080' lt 0 lw 2
+set grid back ls 12
+set grid xtics ytics mxtics
+
+# palette
+set palette defined ( 0 '#D53E4F',\
+    	    	      1 '#F46D43',\
+		              2 '#FDAE61',\
+		              3 '#FEE08B',\
+		              4 '#E6F598',\
+		              5 '#ABDDA4',\
+		              6 '#66C2A5',\
+		              7 '#3288BD' )

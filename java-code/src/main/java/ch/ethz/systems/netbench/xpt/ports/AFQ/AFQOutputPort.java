@@ -57,18 +57,6 @@ public class AFQOutputPort extends OutputPort {
                 if (ipHeader.getSourceId() == this.getOwnId()) {
                     SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
                 }
-                // Tracking drops per rank (above only tracks drops)
-                if (SimulationLogger.hasDropsTrackingEnabled()){
-
-                    // Extract packet rank
-                    FullExtTcpPacket p = (FullExtTcpPacket) packet;
-                    int rank = (int)p.getPriority();
-
-                    // Log drop
-                    SimulationLogger.logDropsPerRank(this.getOwnId(), rank, 1);
-
-
-                }
             }
         }
         

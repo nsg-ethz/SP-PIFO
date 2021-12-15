@@ -42,6 +42,9 @@ public class Simulator {
     // Configuration
     private static NBProperties configuration;
 
+    // Required for the PIFO implementation
+    private static long enqueueCounter;
+
     private Simulator() {
         // Static class only
     }
@@ -243,6 +246,24 @@ public class Simulator {
      */
     public static long getCurrentTime() {
         return now;
+    }
+
+    /**
+     * Retrieve the current enqueue counter (Required for the PIFO queue)
+     *
+     * @return  A counter that is increased by one every time a new packet is enqueued to a PIFO
+     */
+    public static long getEnqueueCounter() {
+        return enqueueCounter;
+    }
+
+    /**
+     * Retrieve the current enqueue counter (Required for the PIFO queue)
+     *
+     * @return  A counter that is increased by one every time a new packet is enqueued to a PIFO
+     */
+    public static void setEnqueueCounter(long updatedEnqueueCounter) {
+        enqueueCounter = updatedEnqueueCounter;
     }
 
     /**

@@ -8,7 +8,6 @@ import ch.ethz.systems.netbench.core.run.infrastructure.NetworkDeviceGenerator;
 import ch.ethz.systems.netbench.core.run.infrastructure.OutputPortGenerator;
 import ch.ethz.systems.netbench.core.run.infrastructure.TransportLayerGenerator;
 import ch.ethz.systems.netbench.ext.bare.BareTransportLayerGenerator;
-import ch.ethz.systems.netbench.ext.basic.EcnTailDropOutputPortGenerator;
 import ch.ethz.systems.netbench.ext.basic.PerfectSimpleLinkGenerator;
 import ch.ethz.systems.netbench.ext.basic.SplitBandwidthLinkGenerator;
 import ch.ethz.systems.netbench.ext.demo.DemoIntermediaryGenerator;
@@ -35,12 +34,9 @@ import ch.ethz.systems.netbench.xpt.simple.simpletcp.SimpleTcpTransportLayerGene
 import ch.ethz.systems.netbench.xpt.sourcerouting.EcmpThenSourceRoutingSwitchGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.SourceRoutingSwitchGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.buffertcp.BufferTcpTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.distmeantcp.DistMeanTcpTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.distrandtcp.DistRandTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.lstftcp.LstfTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.pfabric.PfabricTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.pfzero.PfzeroTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.sparktcp.SparkTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.sphalftcp.SpHalfTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.sptcp.SpTcpTransportLayerGenerator;
 
@@ -177,12 +173,6 @@ class InfrastructureSelector {
 
         switch (Simulator.getConfiguration().getPropertyOrFail("output_port")) {
 
-            case "ecn_tail_drop":
-                return new EcnTailDropOutputPortGenerator(
-                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_max_queue_size_bytes"),
-                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_ecn_threshold_k_bytes")
-                );
-
             case "sppifo":
                 return new SPPIFOOutputPortGenerator(
                         Simulator.getConfiguration().getLongPropertyOrFail("output_port_number_queues"),
@@ -228,11 +218,6 @@ class InfrastructureSelector {
                 );
 
             // Different implementation than FIFO
-            case "tail_drop":
-                return new TailDropOutputPortGenerator(
-                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_max_queue_size_bytes")
-                );
-
             case "afq":
                 return new AFQOutputPortGenerator(
                         Simulator.getConfiguration().getLongPropertyOrFail("output_port_number_queues"),
@@ -289,15 +274,6 @@ class InfrastructureSelector {
                 
             case "buffertcp":
                 return new BufferTcpTransportLayerGenerator();
-
-            case "distmean":
-                return new DistMeanTcpTransportLayerGenerator();
-
-            case "distrand":
-                return new DistRandTcpTransportLayerGenerator();
-            
-            case "sparktcp":
-                return new SparkTransportLayerGenerator();
                 
             case "dctcp":
                 return new NewRenoDctcpTransportLayerGenerator();

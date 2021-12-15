@@ -3,7 +3,6 @@ package ch.ethz.systems.netbench.xpt.ports.FIFO;
 import ch.ethz.systems.netbench.core.Simulator;
 import ch.ethz.systems.netbench.core.log.SimulationLogger;
 import ch.ethz.systems.netbench.core.network.*;
-import ch.ethz.systems.netbench.ext.basic.IpHeader;
 import ch.ethz.systems.netbench.xpt.tcpbase.FullExtTcpPacket;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -41,21 +40,9 @@ public class FIFOOutputPort extends OutputPort {
             // It is now sending again
             setIsSending();
 
-            // Log packet for debugging
-            if(SimulationLogger.hasPacketsTrackingEnabled()){
-                FullExtTcpPacket pk = (FullExtTcpPacket)packet;
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => Packet sent (no queue): SeqNo: " + pk.getSequenceNumber() + ", ACKNo: " + pk.getAcknowledgementNumber() + ", Priority: "+ pk.getPriority());
-            }
-
         } else { // If it is still sending, the packet is added to the queue (if there is space)
 
-            // Log packet for debugging
-            if(SimulationLogger.hasPacketsTrackingEnabled()) {
-                FullExtTcpPacket pk = (FullExtTcpPacket)packet;
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => Packet enqueued: SeqNo: " + pk.getSequenceNumber() + ", ACKNo: " + pk.getAcknowledgementNumber() + ", Priority: " + pk.getPriority());
-            }
-
-            // We tag the enqueue time to the packet, before offering it to PIFO
+            // We tag the enqueue time to the packet, before offering it to FIFO
             FullExtTcpPacket p = (FullExtTcpPacket) packet;
             p.setEnqueueTime(Simulator.getCurrentTime());
 
@@ -71,31 +58,10 @@ public class FIFOOutputPort extends OutputPort {
 
             } else {
 
-                /* Debug drops */
-                String message = "FIFO Queue: [";
-                Object[] contentFIFO = getQueue().toArray();
-                for (int j = 0; j<contentFIFO.length; j++){
-                    message = message + ((FullExtTcpPacket)contentFIFO[j]).getPriority() + "(" + ((FullExtTcpPacket)contentFIFO[j]).getEnqueueTime() + ") , ";
-                }
-                message = message + "]\n";
-                message = message + "Packet dropped: " + p.getPriority() + "(" + p.getEnqueueTime() + ")";
-                //System.out.println(message);
-
-                // Log packet (and queue state) for debugging
-                if(SimulationLogger.hasPacketsTrackingEnabled()){
-                    SimulationLogger.logPacket(message);
-                }
-
                 // Logging dropped packet
                 SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED");
                 if (p.getSourceId() == this.getOwnId()) {
                     SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
-                }
-
-                // Tracking drops per rank (above only tracks drops)
-                if (SimulationLogger.hasDropsTrackingEnabled()) {
-                    int rank = (int) p.getPriority();
-                    SimulationLogger.logDropsPerRank(this.getOwnId(), rank, 1);
                 }
             }
         }

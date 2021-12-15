@@ -41,19 +41,7 @@ public class PIFOOutputPort extends OutputPort {
             // It is now sending again
             setIsSending();
 
-            // Log packet for debugging
-            if(SimulationLogger.hasPacketsTrackingEnabled()){
-                FullExtTcpPacket pk = (FullExtTcpPacket)packet;
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => Packet sent (no queue): SeqNo: " + pk.getSequenceNumber() + ", ACKNo: " + pk.getAcknowledgementNumber() + ", Priority: "+ pk.getPriority());
-            }
-
         } else { // If it is still sending, the packet is added to the queue, making it non-empty
-
-            // Log packet for debugging
-            if(SimulationLogger.hasPacketsTrackingEnabled()) {
-                FullExtTcpPacket pk = (FullExtTcpPacket)packet;
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => Packet enqueued: SeqNo: " + pk.getSequenceNumber() + ", ACKNo: " + pk.getAcknowledgementNumber() + ", Priority: " + pk.getPriority());
-            }
 
             // Enqueue to the PIFO queue
             PIFOQueue pq = (PIFOQueue) getQueue();
@@ -74,12 +62,6 @@ public class PIFOOutputPort extends OutputPort {
                 IpHeader ipHeader = (IpHeader) droppedPacket;
                 if (ipHeader.getSourceId() == this.getOwnId()) {
                     SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
-                }
-
-                // Tracking drops per rank (above only tracks drops)
-                if (SimulationLogger.hasDropsTrackingEnabled()){
-                    int rank = (int)droppedPacket.getPriority();
-                    SimulationLogger.logDropsPerRank(this.getOwnId(), rank, 1);
                 }
 
             }

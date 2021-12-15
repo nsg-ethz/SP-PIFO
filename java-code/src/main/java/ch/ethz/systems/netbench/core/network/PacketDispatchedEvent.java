@@ -19,7 +19,7 @@ public class PacketDispatchedEvent extends Event {
      * @param packet            Packet instance which is dispatched
      * @param dispatchPort      Port that has finished writing the packet to the link
      */
-    PacketDispatchedEvent(long timeFromNowNs, Packet packet, OutputPort dispatchPort) {
+    public PacketDispatchedEvent(long timeFromNowNs, Packet packet, OutputPort dispatchPort) {
         super(timeFromNowNs);
         this.packet = packet;
         this.dispatchPort = dispatchPort;

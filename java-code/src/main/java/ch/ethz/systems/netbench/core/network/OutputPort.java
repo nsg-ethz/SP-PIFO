@@ -4,10 +4,7 @@ import ch.ethz.systems.netbench.core.Simulator;
 import ch.ethz.systems.netbench.core.log.PortLogger;
 import ch.ethz.systems.netbench.core.log.SimulationLogger;
 import ch.ethz.systems.netbench.ext.basic.IpHeader;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.FIFO.FIFOOutputPort;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.PIFO.PIFOQueue;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.PIFO_WFQ.WFQPIFOQueue;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.TailDrop.TailDropOutputPort;
+
 import ch.ethz.systems.netbench.xpt.tcpbase.FullExtTcpPacket;
 
 import java.util.Queue;
@@ -75,131 +72,6 @@ public abstract class OutputPort {
      */
     public abstract void enqueue(Packet packet);
 
-    /**
-     * To be used with SP-PIFO to control droppings
-     * There is no guarantee that the packet is actually sent,
-     * as the queue buffer's limit might be reached.
-     *
-     * @param packet    Packet instance
-     */
-    protected final void potentialEnqueue(Packet packet) {
-
-        // If it is not sending, then the queue is empty at the moment,
-        // so this packet can be immediately send
-        if (!isSending) {
-
-            // Link is now being utilized
-            logger.logLinkUtilized(true);
-
-            // Add event when sending is finished
-            Simulator.registerEvent(new PacketDispatchedEvent(
-                    packet.getSizeBit() / link.getBandwidthBitPerNs(),
-                    packet,
-                    this
-            ));
-
-            // It is now sending again
-            isSending = true;
-
-        } else { // If it is still sending, the packet is added to the queue, making it non-empty
-
-            boolean enqueued = false;
-            enqueued = queue.offer(packet);
-
-
-            if (enqueued){
-                bufferOccupiedBits += packet.getSizeBit();
-                logger.logQueueState(queue.size(), bufferOccupiedBits);
-            } else {
-                SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED");
-                // Convert to IP packet
-                IpHeader ipHeader = (IpHeader) packet;
-                if (ipHeader.getSourceId() == this.getOwnId()) {
-                    SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
-                }
-            }
-        }
-    }
-
-    /**
-     * To be used with PIFO to control droppings
-     * There is no guarantee that the packet is actually sent,
-     * as the queue buffer's limit might be reached. If the limit is reached,
-     * the packet with lower priority (higher rank) is dropped.
-     * @param packet    Packet instance
-     */
-    protected final void push(Packet packet) {
-
-        // If it is not sending, then the queue is empty at the moment,
-        // so this packet can be immediately send
-        if (!isSending) {
-
-            // Link is now being utilized
-            logger.logLinkUtilized(true);
-
-            // Add event when sending is finished
-            Simulator.registerEvent(new PacketDispatchedEvent(
-                    packet.getSizeBit() / link.getBandwidthBitPerNs(),
-                    packet,
-                    this
-            ));
-
-            // It is now sending again
-            isSending = true;
-
-        } else { // If it is still sending, the packet is added to the queue, making it non-empty
-            PIFOQueue pq = (PIFOQueue) queue;
-
-            FullExtTcpPacket droppedPacket = null;
-            droppedPacket = (FullExtTcpPacket)pq.offerPacket(packet);
-
-            // Update buffer size with enqueued packet
-            bufferOccupiedBits += packet.getSizeBit();
-            logger.logQueueState(queue.size(), bufferOccupiedBits);
-
-            // Decrease the size of dropped packet from buffer size
-            if (droppedPacket != null){
-                bufferOccupiedBits -= droppedPacket.getSizeBit();
-                SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED");
-                // Convert to IP packet
-                IpHeader ipHeader = (IpHeader) droppedPacket;
-                if (ipHeader.getSourceId() == this.getOwnId()) {
-                    SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
-                }
-            }
-        }
-    }
-
-    /**
-     * Enqueue the given packet.
-     *
-     * @param packet    Packet instance
-     */
-    protected final void guaranteedEnqueue(Packet packet) {
-
-        // If it is not sending, then the queue is empty at the moment,
-        // so this packet can be immediately send
-        if (!isSending) {
-
-            // Link is now being utilized
-            logger.logLinkUtilized(true);
-
-            // Add event when sending is finished
-            Simulator.registerEvent(new PacketDispatchedEvent(
-                    packet.getSizeBit() / link.getBandwidthBitPerNs(),
-                    packet,
-                    this
-            ));
-
-            // It is now sending again
-            isSending = true;
-
-        } else { // If it is still sending, the packet is added to the queue, making it non-empty
-            bufferOccupiedBits += packet.getSizeBit();
-            queue.add(packet);
-            logger.logQueueState(queue.size(), bufferOccupiedBits);
-        }
-    }
 
     /**
      * Called when a packet has actually been send completely.
@@ -249,52 +121,6 @@ public abstract class OutputPort {
         }
     }
 
-    /**
-     * To be used with PIFO to control fairness.
-     * There is no guarantee that the packet is actually sent,
-     * as the queue buffer's limit might be reached. If the limit is reached,
-     * the packet with lower priority (higher rank) is dropped.
-     * @param packet    Packet instance
-     */
-    protected final void pushWFQ(Packet packet) {
-
-        // If it is not sending, then the queue is empty at the moment,
-        // so this packet can be immediately send
-        if (!isSending) {
-
-            // Link is now being utilized
-            logger.logLinkUtilized(true);
-
-            // Add event when sending is finished
-            Simulator.registerEvent(new PacketDispatchedEvent(
-                    packet.getSizeBit() / link.getBandwidthBitPerNs(),
-                    packet,
-                    this
-            ));
-
-            // It is now sending again
-            isSending = true;
-
-        } else { // If it is still sending, the packet is added to the queue, making it non-empty
-            WFQPIFOQueue pq = (WFQPIFOQueue) queue;
-            Packet droppedPacket = pq.offerPacket(packet, this.ownId);
-
-            // Update the size of the buffer with the size of packet enqueued
-            bufferOccupiedBits += packet.getSizeBit();
-            logger.logQueueState(queue.size(), bufferOccupiedBits);
-
-            // Update the size of the buffer with the size of packet dropped
-            if (droppedPacket != null){
-                bufferOccupiedBits -= droppedPacket.getSizeBit();
-                SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED");
-                // Convert to IP packet
-                IpHeader ipHeader = (IpHeader) droppedPacket;
-                if (ipHeader.getSourceId() == this.getOwnId()) {
-                    SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
-                }
-            }
-        }
-    }
 
     /**
      * Return the network identifier of its own device (to which this output port is attached to).
@@ -372,6 +198,15 @@ public abstract class OutputPort {
         return queue;
     }
 
+    protected Boolean getIsSending() { return isSending; }
+
+    protected void setIsSending() { isSending = true; }
+
+    protected PortLogger getLogger() {
+        return logger;
+    }
+
+
     /**
      * Change the amount of bits occupied in the buffer with a delta.
      *
@@ -383,5 +218,13 @@ public abstract class OutputPort {
     protected void decreaseBufferOccupiedBits(long deltaAmount) {
         bufferOccupiedBits -= deltaAmount;
         assert(bufferOccupiedBits >= 0);
+    }
+
+    protected void increaseBufferOccupiedBits(long deltaAmount) {
+        bufferOccupiedBits += deltaAmount;
+    }
+
+    protected Link getLink() {
+        return link;
     }
 }

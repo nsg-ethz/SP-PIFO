@@ -19,15 +19,14 @@ import ch.ethz.systems.netbench.ext.flowlet.IdentityFlowletIntermediaryGenerator
 import ch.ethz.systems.netbench.ext.flowlet.UniformFlowletIntermediaryGenerator;
 import ch.ethz.systems.netbench.ext.hybrid.EcmpThenValiantSwitchGenerator;
 import ch.ethz.systems.netbench.ext.valiant.RangeValiantSwitchGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.AFQ.AFQOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.FIFO.FIFOOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.PIFO.PIFOOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.SPPIFO.SPPIFOOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.Greedy.GreedyOutputPortGenerator_Advanced;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.Greedy.GreedyOutputPortGenerator_Simple;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.SPPIFO_WFQ.WFQSPPIFOOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.TailDrop.TailDropOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.sppifo.ports.PIFO_WFQ.WFQPIFOOutputPortGenerator;
+import ch.ethz.systems.netbench.xpt.ports.AFQ.AFQOutputPortGenerator;
+import ch.ethz.systems.netbench.xpt.ports.FIFO.FIFOOutputPortGenerator;
+import ch.ethz.systems.netbench.xpt.ports.PIFO.PIFOOutputPortGenerator;
+import ch.ethz.systems.netbench.xpt.ports.SPPIFO.SPPIFOOutputPortGenerator;
+import ch.ethz.systems.netbench.xpt.ports.Greedy.GreedyOutputPortGenerator_Advanced;
+import ch.ethz.systems.netbench.xpt.ports.Greedy.GreedyOutputPortGenerator_Simple;
+import ch.ethz.systems.netbench.xpt.ports.SPPIFO_WFQ.WFQSPPIFOOutputPortGenerator;
+import ch.ethz.systems.netbench.xpt.ports.PIFO_WFQ.WFQPIFOOutputPortGenerator;
 import ch.ethz.systems.netbench.xpt.asaf.routing.priority.PriorityFlowletIntermediaryGenerator;
 import ch.ethz.systems.netbench.xpt.newreno.newrenodctcp.NewRenoDctcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.newreno.newrenotcp.NewRenoTcpTransportLayerGenerator;
@@ -35,9 +34,6 @@ import ch.ethz.systems.netbench.xpt.simple.simpledctcp.SimpleDctcpTransportLayer
 import ch.ethz.systems.netbench.xpt.simple.simpletcp.SimpleTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.EcmpThenSourceRoutingSwitchGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.SourceRoutingSwitchGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.ports.BoundedPriorityOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.ports.PriorityOutputPortGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.ports.UnlimitedOutputPortGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.buffertcp.BufferTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.distmeantcp.DistMeanTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.distrandtcp.DistRandTcpTransportLayerGenerator;
@@ -244,16 +240,6 @@ class InfrastructureSelector {
                         Simulator.getConfiguration().getLongPropertyOrFail("output_port_bytes_per_round")
                 );
 
-            case "priority":
-                return new PriorityOutputPortGenerator();
-
-            case "bounded_priority":
-                return new BoundedPriorityOutputPortGenerator(
-                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_max_queue_size_bytes")*8
-                );
-
-            case "unlimited":
-                return new UnlimitedOutputPortGenerator();
 
             default:
                 throw new PropertyValueInvalidException(

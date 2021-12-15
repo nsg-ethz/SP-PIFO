@@ -69,9 +69,18 @@ public class FullExtTcpPacket extends TcpPacket implements SelectiveAckHeader, E
 
     @Override
     public int compareTo(Object o) {
-        PriorityHeader header = (PriorityHeader) o;
-        PriorityHeader header2 = (PriorityHeader) this;
-        return Long.compare((int)header2.getPriority(), (int)header.getPriority());
+        // "this" is the packet being inserted
+        // "other" is the packet we're comparing to (in the queue)
+        FullExtTcpPacket other = (FullExtTcpPacket) o;
+
+        // Priority = rank
+        int i = Long.compare((int)this.getPriority(), (int)other.getPriority());
+        // If the ranks are not equal, return comparator int
+        if (i != 0) return i;
+
+        i = Long.compare((int)this.getEnqueueTime(), (int)other.getEnqueueTime());
+        //System.out.println("Comparison: " + i + " other " + (int)other.getEnqueueTime() + " this " + (int)this.getEnqueueTime());
+        return i;
     }
 
     public int getEnqueuedRound(){

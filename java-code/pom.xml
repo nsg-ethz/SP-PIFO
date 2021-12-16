@@ -56,7 +56,7 @@
                     <finalName>NetBench</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>ch.ethz.systems.netbench.core.run.MainSimulation</mainClass>
+                            <mainClass>ch.ethz.systems.netbench.core.run.MainFromProperties</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -75,20 +75,6 @@ More information about the framework can be found in the thesis located at [http
 
     * Pro tip: Just import the `pom.xml` file to your favorite SDK (we used [IntelliJ IDEA](https://www.jetbrains.com/idea/download/)), which provides all the configuration for the Maven project. 
 
-#### SP-PIFO extensions to the original NetBench
-
-In order to perform the simulations presented in the SP-PIFO paper, we needed to add some extensions to the original NetBench simulator. We detail those extensions in the following lines. 
-
- * **Output ports and transport layers**: They can be found within the *xpt (experimental)* sub-package in the main source code of the simulator (i.e., `src.main.java.ch.ethz.systems.netbench.xpt`). In particular:
-
-    * `xpt/sppifo/ports` contains the implementations of the scheduling algorithms used on our simulations which were not available in the original distribution (e.g., FIFO, PIFO, AFQ, SP-PIFO, and Greedy).
-    * `xpt/vojislav_and_sppifo` contains some of the transport layers we used in our experiments (e.g, pFabric, LSTF). They were part of the original distribution but we had to extend them according to our needs.
-    * `core/config/exceptions/BaseAllowedProperties` and `core/config/run/traffic/InfrastructureSelector` contain the configuration parameters which are required to use those output ports and transport layers. 
-
- * **Loggers**: We have added new loggers to track (i) the dynamic mapping of packet ranks to priority queues, (ii) the evolution of queue bounds, (iii) the unpifoness, and (iv) the amount of inversions generated per ranks in each of the presented scheduling algorithms. 
-
-    * `core/config/log/SimulationLogger` contains those extra loggers with their respective configurations. 
-
 #### Replotting without rerunning
 
 For convenience, we've added all the processed results and the plots without the logs (which are too big for git) in the `./projects/sppifo/plots/` folder. As soon as the `MainFromIntelliJ.java` file is executed, the logs will be automatically generated for each simulation and the plots will be rerun with the results of the new simulations. Feel free to adapt the `MainFromIntelliJ.java` file to select which of the individual Figures you want to replot.

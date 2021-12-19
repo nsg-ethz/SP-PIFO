@@ -4,6 +4,8 @@ import ch.ethz.systems.netbench.core.Simulator;
 import ch.ethz.systems.netbench.core.log.SimulationLogger;
 import ch.ethz.systems.netbench.core.network.*;
 import ch.ethz.systems.netbench.xpt.tcpbase.FullExtTcpPacket;
+
+import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class FIFOOutputPort extends OutputPort {
@@ -48,6 +50,23 @@ public class FIFOOutputPort extends OutputPort {
 
             // Tail-drop enqueue
             if (getQueueSize() <= maxQueueSize-1) {
+
+                // Check whether there is an inversion for the packet enqueued
+                if (SimulationLogger.hasInversionsTrackingEnabled()){
+
+                    // We compute the perceived rank
+                    Object[] contentFIFO = super.getQueue().toArray();
+                    if (contentFIFO.length > 0){
+                        Arrays.sort(contentFIFO);
+                        FullExtTcpPacket packet_maxrank = (FullExtTcpPacket) contentFIFO[contentFIFO.length-1];
+                        int rank_perceived = (int)packet_maxrank.getPriority();
+
+                        // We measure the inversion
+                        if (rank_perceived > p.getPriority()){
+                            SimulationLogger.logInversionsPerRank(this.getOwnId(), (int) p.getPriority(), 1);
+                        }
+                    }
+                }
 
                 // Enqueue to the FIFO queue
                 getQueue().add(packet);

@@ -99,7 +99,6 @@ public class SPPIFOQueue implements Queue {
 
                 if(SimulationLogger.hasQueueBoundTrackingEnabled()){
                     for (int c=queueList.size()-1; c>=0; c--){
-                        //SimulationLogger.logQueueBound(this.ownId, c, queueList.get(c).size());
                         SimulationLogger.logQueueBound(this.ownId, c, (int)queueBounds.get(c));
                     }
                 }

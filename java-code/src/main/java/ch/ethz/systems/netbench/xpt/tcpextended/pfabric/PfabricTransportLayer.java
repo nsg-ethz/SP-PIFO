@@ -1,4 +1,4 @@
-package ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.pfabric;
+package ch.ethz.systems.netbench.xpt.tcpextended.pfabric;
 
 
 import ch.ethz.systems.netbench.core.network.Socket;

@@ -1,4 +1,4 @@
-package ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.lstftcp;
+package ch.ethz.systems.netbench.xpt.tcpextended.lstftcp;
 
 import ch.ethz.systems.netbench.core.log.SimulationLogger;
 import ch.ethz.systems.netbench.core.network.TransportLayer;

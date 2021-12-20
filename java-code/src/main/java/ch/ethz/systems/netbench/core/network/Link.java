@@ -19,7 +19,7 @@ public abstract class Link {
      *
      * @return  Link bandwidth in bit/ns
      */
-    public abstract long getBandwidthBitPerNs();
+    public abstract double getBandwidthBitPerNs();
 
     /**
      * Check whether the next transmission of a packet will fail.

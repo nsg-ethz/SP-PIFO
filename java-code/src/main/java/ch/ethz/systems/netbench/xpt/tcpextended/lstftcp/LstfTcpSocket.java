@@ -1,6 +1,8 @@
-package ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.lstftcp;
+package ch.ethz.systems.netbench.xpt.tcpextended.lstftcp;
 
 
+import ch.ethz.systems.netbench.core.Simulator;
+import ch.ethz.systems.netbench.core.log.SimulationLogger;
 import ch.ethz.systems.netbench.core.network.TransportLayer;
 import ch.ethz.systems.netbench.xpt.newreno.newrenotcp.NewRenoTcpSocket;
 import ch.ethz.systems.netbench.xpt.tcpbase.FullExtTcpPacket;
@@ -45,7 +47,7 @@ public class LstfTcpSocket extends NewRenoTcpSocket {
 
         if (rankDistribution.equals("uniform")){
             Random independentRng = new Random();
-            double outcome = independentRng.nextDouble()*this.rankBound; //Ranks distribuits uniformement de 1 a 100
+            double outcome = independentRng.nextDouble()*this.rankBound; //Ranks distribuited uniformly from 1 to 100
             priority = (long)outcome;
 
         } else if (rankDistribution.equals("exponential")){
@@ -86,7 +88,25 @@ public class LstfTcpSocket extends NewRenoTcpSocket {
             int result = (int) testStat.getRandom(lambda);
             result = Math.abs(result % 100);
             priority = (long) Math.abs(result);
+
+        } else if (rankDistribution.equals("onerank")) {
+            priority = (long) 0;
+
         }
+
+        // Log packet for debugging
+        if (SimulationLogger.hasPacketsTrackingEnabled()) {
+            if (ACK && SYN){
+                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => SYN-ACK Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
+            } else if (SYN) {
+                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => SYN Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
+            } else if (ACK) {
+                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => ACK Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
+            } else {
+                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => DATA Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
+            }
+        }
+
 
         return new FullExtTcpPacket(
             flowId, dataSizeByte, sourceId, destinationId,
@@ -98,6 +118,7 @@ public class LstfTcpSocket extends NewRenoTcpSocket {
             0, // Window size
             priority
         );
+
     }
 
 }

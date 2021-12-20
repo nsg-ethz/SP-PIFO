@@ -1,4 +1,4 @@
-package ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.sphalftcp;
+package ch.ethz.systems.netbench.xpt.tcpextended.sphalftcp;
 
 import ch.ethz.systems.netbench.core.network.Socket;
 import ch.ethz.systems.netbench.core.network.TransportLayer;

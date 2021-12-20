@@ -3,11 +3,10 @@ package ch.ethz.systems.netbench.core.network;
 import ch.ethz.systems.netbench.core.Simulator;
 import ch.ethz.systems.netbench.core.log.PortLogger;
 import ch.ethz.systems.netbench.core.log.SimulationLogger;
-import ch.ethz.systems.netbench.ext.basic.IpHeader;
-
 import ch.ethz.systems.netbench.xpt.tcpbase.FullExtTcpPacket;
 
 import java.util.Queue;
+
 
 /**
  * Abstraction for an output port on a network device.
@@ -107,7 +106,7 @@ public abstract class OutputPort {
 
             // Register when the packet is actually dispatched
             Simulator.registerEvent(new PacketDispatchedEvent(
-                    packetFromQueue.getSizeBit() / link.getBandwidthBitPerNs(),
+                    (long)((double)packet.getSizeBit() / link.getBandwidthBitPerNs()),
                     packetFromQueue,
                     this
             ));

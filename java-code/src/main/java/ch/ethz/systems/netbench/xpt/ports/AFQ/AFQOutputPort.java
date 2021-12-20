@@ -32,7 +32,7 @@ public class AFQOutputPort extends OutputPort {
 
             // Add event when sending is finished
             Simulator.registerEvent(new PacketDispatchedEvent(
-                    packet.getSizeBit() / getLink().getBandwidthBitPerNs(),
+                    (long)((double)packet.getSizeBit() / getLink().getBandwidthBitPerNs()),
                     packet,
                     this
             ));

@@ -117,15 +117,6 @@ public class GreedyQueue_Advanced implements Queue {
             queueBounds.put(6, 75);
             queueBounds.put(7, 87);
 
-        } else if (initialization.equals("uniform_automatic")) {
-            this.rank_bound = 100;// Needs to be bigger than the initial maximum queue bound
-            int division = this.rank_bound / (int)numQueues;
-            for (int i=0; i<numQueues; i++){
-                int bound = i * division;
-                queueBounds.put(i, bound);
-            }
-
-
         } else if (initialization.equals("uniform32")) {
             this.rank_bound = 100; // Needs to be bigger than the initial maximum queue bound
             for (int i=0; i<numQueues; i++){

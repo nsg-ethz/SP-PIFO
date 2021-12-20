@@ -33,7 +33,7 @@ public class PIFOOutputPort extends OutputPort {
 
             // Add event when sending is finished
             Simulator.registerEvent(new PacketDispatchedEvent(
-                    packet.getSizeBit() / getLink().getBandwidthBitPerNs(),
+                    (long)((double)packet.getSizeBit() / getLink().getBandwidthBitPerNs()),
                     packet,
                     this
             ));
@@ -63,7 +63,6 @@ public class PIFOOutputPort extends OutputPort {
                 if (ipHeader.getSourceId() == this.getOwnId()) {
                     SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
                 }
-
             }
         }
     }

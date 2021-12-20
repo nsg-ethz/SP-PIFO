@@ -13,9 +13,9 @@ import ch.ethz.systems.netbench.core.run.infrastructure.LinkGenerator;
 public class SplitBandwidthLinkGenerator extends LinkGenerator {
 
     private final long delayNs;
-    private final long bandwidthBitPerNs;
+    private final double bandwidthBitPerNs;
 
-    public SplitBandwidthLinkGenerator(long delayNs, long bandwidthBitPerNs) {
+    public SplitBandwidthLinkGenerator(long delayNs, double bandwidthBitPerNs) {
         this.delayNs = delayNs;
         this.bandwidthBitPerNs = bandwidthBitPerNs;
         SimulationLogger.logInfo("Link", "PERFECT_SIMPLE_LINK(delayNs=" + delayNs + ", bandwidthBitPerNs=" + bandwidthBitPerNs + ")");

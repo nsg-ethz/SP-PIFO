@@ -1,4 +1,4 @@
-package ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.pfzero;
+package ch.ethz.systems.netbench.xpt.tcpextended.pfzero;
 
 
 import ch.ethz.systems.netbench.core.Simulator;

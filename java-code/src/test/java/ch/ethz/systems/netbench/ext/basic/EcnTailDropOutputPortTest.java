@@ -43,7 +43,7 @@ public class EcnTailDropOutputPortTest {
         when(targetNetworkDevice.getIdentifier()).thenReturn(67);
 
         // Port with 100 packets and 40 packets ECN limit
-        when(link.getBandwidthBitPerNs()).thenReturn(10L);
+        when(link.getBandwidthBitPerNs()).thenReturn(10.0);
         when(link.getDelayNs()).thenReturn(20L);
 
     }

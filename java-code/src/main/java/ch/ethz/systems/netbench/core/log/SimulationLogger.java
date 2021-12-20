@@ -168,10 +168,18 @@ public class SimulationLogger {
             writerPortUtilizationFile = openWriter("port_utilization.log");
 
             // SP-PIFO log writers
-            writerRanktoQueuesMapping = openWriter("rank_mapping.csv.log");
-            writerQueueBoundTracking = openWriter("queuebound_tracking.csv.log");
-            writerUnpifonessTracking = openWriter("unpifoness_tracking.csv.log");
-            writerInversionsTracking = openWriter("inversions_tracking.csv.log");
+            if (rankMappingEnabled){
+                writerRanktoQueuesMapping = openWriter("rank_mapping.csv.log");
+            }
+            if (queueBoundTrackingEnabled){
+                writerQueueBoundTracking = openWriter("queuebound_tracking.csv.log");
+            }
+            if (unpifonessTrackingEnabled){
+                writerUnpifonessTracking = openWriter("unpifoness_tracking.csv.log");
+            }
+            if(inversionsTrackingEnabled){
+                writerInversionsTracking = openWriter("inversions_tracking.csv.log");
+            }
 
             // Flow log writers
             writerFlowThroughputFile = openWriter("flow_throughput.csv.log");
@@ -270,10 +278,18 @@ public class SimulationLogger {
             writerFlowCompletionFile.close();
 
             // SP-PIFO: Close log files
-            writerRanktoQueuesMapping.close();
-            writerQueueBoundTracking.close();
-            writerUnpifonessTracking.close();
-            writerInversionsTracking.close();
+            if (rankMappingEnabled){
+                writerRanktoQueuesMapping.close();
+            }
+            if (queueBoundTrackingEnabled){
+                writerQueueBoundTracking.close();
+            }
+            if (unpifonessTrackingEnabled){
+                writerUnpifonessTracking.close();
+            }
+            if(inversionsTrackingEnabled){
+                writerInversionsTracking.close();
+            }
 
             // Also added ones are closed automatically at the end
             for (BufferedWriter writer : writersAdded.values()) {
@@ -298,6 +314,7 @@ public class SimulationLogger {
 
     }
 
+    /* SP-PIFO Logging */
     public static void logRankMapping(int id, long rank, long queue) {
         try {
             writerRanktoQueuesMapping.write(id + "," + rank + "," + queue + "\n");

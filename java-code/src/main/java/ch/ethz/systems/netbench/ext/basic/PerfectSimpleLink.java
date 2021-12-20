@@ -5,7 +5,7 @@ import ch.ethz.systems.netbench.core.network.Link;
 public class PerfectSimpleLink extends Link {
 
     private final long delayNs;
-    private final long bandwidthBitPerNs;
+    private final double bandwidthBitPerNs;
 
     /**
      * Perfect simple link that never drops a packet.
@@ -13,7 +13,7 @@ public class PerfectSimpleLink extends Link {
      * @param delayNs               Delay of each packet in nanoseconds
      * @param bandwidthBitPerNs     Bandwidth of the link (maximum line rate) in bits/ns
      */
-    PerfectSimpleLink(long delayNs, long bandwidthBitPerNs) {
+    PerfectSimpleLink(long delayNs, double bandwidthBitPerNs) {
         this.delayNs = delayNs;
         this.bandwidthBitPerNs = bandwidthBitPerNs;
     }
@@ -24,7 +24,7 @@ public class PerfectSimpleLink extends Link {
     }
 
     @Override
-    public long getBandwidthBitPerNs() {
+    public double getBandwidthBitPerNs() {
         return bandwidthBitPerNs;
     }
 

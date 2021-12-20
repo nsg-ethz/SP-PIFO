@@ -11,6 +11,8 @@ public class BaseAllowedProperties {
             "enable_log_flow_throughput",
             "enable_generate_human_readable_flow_completion_log",
             "enable_log_delay",
+
+            // SP-PIFO
             "enable_rank_mapping",
             "enable_queue_bound_tracking",
             "enable_unpifoness_tracking",

@@ -33,12 +33,11 @@ import ch.ethz.systems.netbench.xpt.simple.simpledctcp.SimpleDctcpTransportLayer
 import ch.ethz.systems.netbench.xpt.simple.simpletcp.SimpleTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.EcmpThenSourceRoutingSwitchGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.SourceRoutingSwitchGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.buffertcp.BufferTcpTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.lstftcp.LstfTcpTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.pfabric.PfabricTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.pfzero.PfzeroTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.sphalftcp.SpHalfTcpTransportLayerGenerator;
-import ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.sptcp.SpTcpTransportLayerGenerator;
+import ch.ethz.systems.netbench.xpt.tcpextended.lstftcp.LstfTcpTransportLayerGenerator;
+import ch.ethz.systems.netbench.xpt.tcpextended.pfabric.PfabricTransportLayerGenerator;
+import ch.ethz.systems.netbench.xpt.tcpextended.pfzero.PfzeroTransportLayerGenerator;
+import ch.ethz.systems.netbench.xpt.tcpextended.sphalftcp.SpHalfTcpTransportLayerGenerator;
+import ch.ethz.systems.netbench.xpt.tcpextended.sptcp.SpTcpTransportLayerGenerator;
 
 class InfrastructureSelector {
 
@@ -141,13 +140,13 @@ class InfrastructureSelector {
             case "perfect_simple":
                 return new PerfectSimpleLinkGenerator(
                         Simulator.getConfiguration().getLongPropertyOrFail("link_delay_ns"),
-                        Simulator.getConfiguration().getLongPropertyOrFail("link_bandwidth_bit_per_ns")
+                        Simulator.getConfiguration().getDoublePropertyOrFail("link_bandwidth_bit_per_ns")
                 );
 
             case "split_bw":
                 return new SplitBandwidthLinkGenerator(
                         Simulator.getConfiguration().getLongPropertyOrFail("link_delay_ns"),
-                        Simulator.getConfiguration().getLongPropertyOrFail("link_bandwidth_bit_per_ns")
+                        Simulator.getConfiguration().getDoublePropertyOrFail("link_bandwidth_bit_per_ns")
                 );
 
             default:
@@ -217,7 +216,6 @@ class InfrastructureSelector {
                         Simulator.getConfiguration().getLongPropertyOrFail("output_port_max_size_packets")
                 );
 
-            // Different implementation than FIFO
             case "afq":
                 return new AFQOutputPortGenerator(
                         Simulator.getConfiguration().getLongPropertyOrFail("output_port_number_queues"),
@@ -271,9 +269,6 @@ class InfrastructureSelector {
                 
             case "pfzero":
                 return new PfzeroTransportLayerGenerator();
-                
-            case "buffertcp":
-                return new BufferTcpTransportLayerGenerator();
                 
             case "dctcp":
                 return new NewRenoDctcpTransportLayerGenerator();

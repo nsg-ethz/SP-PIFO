@@ -24,18 +24,19 @@ public class PacketDispatchedEvent extends Event {
         this.packet = packet;
         this.dispatchPort = dispatchPort;
 
+    }
+
+    @Override
+    public void trigger() {
+
+        dispatchPort.dispatch(packet);
+
         // Log rank of packet enqueued and queue selected if enabled
         //if(SimulationLogger.hasRankMappingEnabled()){
         //    FullExtTcpPacket p = (FullExtTcpPacket) packet;
         //    int rank = (int)p.getPriority();
         //    SimulationLogger.logRankMapping(dispatchPort.getOwnId(), rank, 0);
         //}
-
-    }
-
-    @Override
-    public void trigger() {
-        dispatchPort.dispatch(packet);
     }
 
     @Override

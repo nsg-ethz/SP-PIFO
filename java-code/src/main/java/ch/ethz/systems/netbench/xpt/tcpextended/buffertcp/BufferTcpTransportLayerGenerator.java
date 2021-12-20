@@ -1,4 +1,4 @@
-package ch.ethz.systems.netbench.xpt.voijslav_and_sppifo.tcp.buffertcp;
+package ch.ethz.systems.netbench.xpt.tcpextended.buffertcp;
 
 
 import ch.ethz.systems.netbench.core.Simulator;

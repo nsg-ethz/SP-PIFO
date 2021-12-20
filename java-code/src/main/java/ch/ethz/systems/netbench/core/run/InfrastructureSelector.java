@@ -270,7 +270,10 @@ class InfrastructureSelector {
             case "pfzero":
                 return new PfzeroTransportLayerGenerator();
                 
-            case "dctcp":
+            case "buffertcp":
+                return new BufferTcpTransportLayerGenerator();
+            
+                case "dctcp":
                 return new NewRenoDctcpTransportLayerGenerator();
 
             case "simple_tcp":

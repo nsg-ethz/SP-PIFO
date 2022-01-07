@@ -1,6 +1,12 @@
 
 # SP-PIFO: Analysis and performance evaluation
 
+## Quick start
+
+Execute `./run.sh`. It compiles and runs the simulations to get all the plots from the paper.
+
+---
+
 ## Getting started with [NetBench](https://github.com/ndal-eth/netbench)
 
 #### 1. Software dependencies

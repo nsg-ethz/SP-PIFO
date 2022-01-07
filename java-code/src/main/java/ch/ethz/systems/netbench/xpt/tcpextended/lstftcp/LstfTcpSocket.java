@@ -89,24 +89,7 @@ public class LstfTcpSocket extends NewRenoTcpSocket {
             result = Math.abs(result % 100);
             priority = (long) Math.abs(result);
 
-        } else if (rankDistribution.equals("onerank")) {
-            priority = (long) 0;
-
         }
-
-        // Log packet for debugging
-        if (SimulationLogger.hasPacketsTrackingEnabled()) {
-            if (ACK && SYN){
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => SYN-ACK Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
-            } else if (SYN) {
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => SYN Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
-            } else if (ACK) {
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => ACK Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
-            } else {
-                SimulationLogger.logPacket("Time: " + Simulator.getCurrentTime() + " => DATA Packet generated: SeqNo: " + sequenceNumber + ", ACKNo: " + ackNumber + ", Priority: "+ priority);
-            }
-        }
-
 
         return new FullExtTcpPacket(
             flowId, dataSizeByte, sourceId, destinationId,

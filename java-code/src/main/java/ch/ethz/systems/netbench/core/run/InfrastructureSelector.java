@@ -33,6 +33,7 @@ import ch.ethz.systems.netbench.xpt.simple.simpledctcp.SimpleDctcpTransportLayer
 import ch.ethz.systems.netbench.xpt.simple.simpletcp.SimpleTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.EcmpThenSourceRoutingSwitchGenerator;
 import ch.ethz.systems.netbench.xpt.sourcerouting.SourceRoutingSwitchGenerator;
+import ch.ethz.systems.netbench.xpt.tcpextended.buffertcp.BufferTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.tcpextended.lstftcp.LstfTcpTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.tcpextended.pfabric.PfabricTransportLayerGenerator;
 import ch.ethz.systems.netbench.xpt.tcpextended.pfzero.PfzeroTransportLayerGenerator;
@@ -270,7 +271,10 @@ class InfrastructureSelector {
             case "pfzero":
                 return new PfzeroTransportLayerGenerator();
                 
-            case "dctcp":
+            case "buffertcp":
+                return new BufferTcpTransportLayerGenerator();
+            
+                case "dctcp":
                 return new NewRenoDctcpTransportLayerGenerator();
 
             case "simple_tcp":

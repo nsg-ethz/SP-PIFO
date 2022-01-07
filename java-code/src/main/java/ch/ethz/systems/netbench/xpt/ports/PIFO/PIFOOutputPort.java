@@ -55,8 +55,6 @@ public class PIFOOutputPort extends OutputPort {
 
             } else {
 
-                decreaseBufferOccupiedBits(droppedPacket.getSizeBit());
-
                 // Logging dropped packet
                 SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED");
                 IpHeader ipHeader = (IpHeader) droppedPacket;

@@ -8,8 +8,10 @@ import ch.ethz.systems.netbench.core.run.infrastructure.NetworkDeviceGenerator;
 import ch.ethz.systems.netbench.core.run.infrastructure.OutputPortGenerator;
 import ch.ethz.systems.netbench.core.run.infrastructure.TransportLayerGenerator;
 import ch.ethz.systems.netbench.ext.bare.BareTransportLayerGenerator;
+import ch.ethz.systems.netbench.ext.basic.EcnTailDropOutputPortGenerator;
 import ch.ethz.systems.netbench.ext.basic.PerfectSimpleLinkGenerator;
 import ch.ethz.systems.netbench.ext.basic.SplitBandwidthLinkGenerator;
+import ch.ethz.systems.netbench.ext.basic.TailDropOutputPortGenerator;
 import ch.ethz.systems.netbench.ext.demo.DemoIntermediaryGenerator;
 import ch.ethz.systems.netbench.ext.demo.DemoTransportLayerGenerator;
 import ch.ethz.systems.netbench.ext.ecmp.EcmpSwitchGenerator;
@@ -172,6 +174,17 @@ class InfrastructureSelector {
     static OutputPortGenerator selectOutputPortGenerator() {
 
         switch (Simulator.getConfiguration().getPropertyOrFail("output_port")) {
+
+            case "tail_drop":
+                return new TailDropOutputPortGenerator(
+                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_max_queue_size_bytes")
+                );
+
+            case "ecn_tail_drop":
+                return new EcnTailDropOutputPortGenerator(
+                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_max_queue_size_bytes"),
+                        Simulator.getConfiguration().getLongPropertyOrFail("output_port_ecn_threshold_k_bytes")
+                );
 
             case "sppifo":
                 return new SPPIFOOutputPortGenerator(

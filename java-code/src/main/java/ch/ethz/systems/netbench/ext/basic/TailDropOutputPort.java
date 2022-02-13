@@ -1,19 +1,19 @@
 package ch.ethz.systems.netbench.ext.basic;
 
 import ch.ethz.systems.netbench.core.Simulator;
-import ch.ethz.systems.netbench.core.network.*;
 import ch.ethz.systems.netbench.core.log.SimulationLogger;
+import ch.ethz.systems.netbench.core.network.*;
+import ch.ethz.systems.netbench.ext.basic.IpHeader;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class EcnTailDropOutputPort extends OutputPort {
+public class TailDropOutputPort extends OutputPort {
 
-    private final long ecnThresholdKBits;
     private final long maxQueueSizeBits;
 
-    EcnTailDropOutputPort(NetworkDevice ownNetworkDevice, NetworkDevice targetNetworkDevice, Link link, long maxQueueSizeBytes, long ecnThresholdKBytes) {
+    TailDropOutputPort(NetworkDevice ownNetworkDevice, NetworkDevice targetNetworkDevice, Link link, long maxQueueSizeBytes) {
         super(ownNetworkDevice, targetNetworkDevice, link, new LinkedBlockingQueue<Packet>());
         this.maxQueueSizeBits = maxQueueSizeBytes * 8L;
-        this.ecnThresholdKBits = ecnThresholdKBytes * 8L;
     }
 
     /**
@@ -27,11 +27,6 @@ public class EcnTailDropOutputPort extends OutputPort {
 
         // Convert to IP packet
         IpHeader ipHeader = (IpHeader) packet;
-
-        // Mark congestion flag if size of the queue is too big
-        if (getBufferOccupiedBits() >= ecnThresholdKBits) {
-            ipHeader.markCongestionEncountered();
-        }
 
         // Tail-drop enqueue
         if (getBufferOccupiedBits() + ipHeader.getSizeBit() <= maxQueueSizeBits) {
@@ -65,7 +60,5 @@ public class EcnTailDropOutputPort extends OutputPort {
                 SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED_AT_SOURCE");
             }
         }
-
     }
-
 }

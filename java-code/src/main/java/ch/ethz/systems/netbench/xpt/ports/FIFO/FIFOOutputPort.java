@@ -13,7 +13,7 @@ public class FIFOOutputPort extends OutputPort {
     private final long maxQueueSize;
 
     FIFOOutputPort(NetworkDevice ownNetworkDevice, NetworkDevice targetNetworkDevice, Link link, long maxQueueSize) {
-        super(ownNetworkDevice, targetNetworkDevice, link, new LinkedBlockingQueue<Packet>());
+        super(ownNetworkDevice, targetNetworkDevice, link, new FIFOQueue<Packet>(ownNetworkDevice.getIdentifier()));
         this.maxQueueSize = maxQueueSize;
     }
 
@@ -50,23 +50,6 @@ public class FIFOOutputPort extends OutputPort {
 
             // Tail-drop enqueue
             if (getQueueSize() <= maxQueueSize-1) {
-
-                // Check whether there is an inversion for the packet enqueued
-                if (SimulationLogger.hasInversionsTrackingEnabled()){
-
-                    // We compute the perceived rank
-                    Object[] contentFIFO = super.getQueue().toArray();
-                    if (contentFIFO.length > 0){
-                        Arrays.sort(contentFIFO);
-                        FullExtTcpPacket packet_maxrank = (FullExtTcpPacket) contentFIFO[contentFIFO.length-1];
-                        int rank_perceived = (int)packet_maxrank.getPriority();
-
-                        // We measure the inversion
-                        if (rank_perceived > p.getPriority()){
-                            SimulationLogger.logInversionsPerRank(this.getOwnId(), (int) p.getPriority(), 1);
-                        }
-                    }
-                }
 
                 // Enqueue to the FIFO queue
                 getQueue().add(packet);

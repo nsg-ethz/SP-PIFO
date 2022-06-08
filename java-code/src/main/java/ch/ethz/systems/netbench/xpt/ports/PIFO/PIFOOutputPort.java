@@ -47,13 +47,15 @@ public class PIFOOutputPort extends OutputPort {
             PIFOQueue pq = (PIFOQueue) getQueue();
             FullExtTcpPacket droppedPacket = (FullExtTcpPacket)pq.offerPacket(packet);
 
-            if (droppedPacket == null) {
+            // Update buffer size with enqueued packet
+            increaseBufferOccupiedBits(packet.getSizeBit());
+            getLogger().logQueueState(pq.size(), getBufferOccupiedBits());
 
-                // Update buffer size with enqueued packet
-                increaseBufferOccupiedBits(packet.getSizeBit());
+            if (droppedPacket != null) {
+
+                // Update buffer size with dropped packet
+                decreaseBufferOccupiedBits(droppedPacket.getSizeBit());
                 getLogger().logQueueState(pq.size(), getBufferOccupiedBits());
-
-            } else {
 
                 // Logging dropped packet
                 SimulationLogger.increaseStatisticCounter("PACKETS_DROPPED");

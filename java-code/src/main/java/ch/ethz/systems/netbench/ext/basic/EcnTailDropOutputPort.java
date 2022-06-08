@@ -54,8 +54,8 @@ public class EcnTailDropOutputPort extends OutputPort {
                 setIsSending();
 
             } else { // If it is still sending, the packet is added to the queue, making it non-empty
-                increaseBufferOccupiedBits(packet.getSizeBit());
                 getQueue().add(packet);
+                increaseBufferOccupiedBits(packet.getSizeBit());
                 getLogger().logQueueState(getQueue().size(), getBufferOccupiedBits());
             }
 
